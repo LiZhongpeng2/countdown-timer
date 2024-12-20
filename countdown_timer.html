@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Countdown</title>
+    
+    <style>
+        body {
+           /* initialize the whole page fitstly*/
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(45deg, #2c3e50, #3498db);
+        font-family: Arial, sans-serif;
+        color: white;
+        font-family: Consolas, 'Courier New', monospace; 
+    }
+
+    .title {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        
+    }
+
+    .countdownAll-container {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .four_container {
+        text-align: center;
+        min-width: 100px;
+    }
+
+    .number {
+        font-size: 3.5rem;
+        font-weight: bold;
+        background: rgba(255,255,255,0.1);
+        padding: 1rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        margin-bottom: 0.5rem;
+    }
+
+    .label {
+        font-size: 1rem;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .setTime {
+        margin-top: 2rem;
+        display: flex;
+        gap: 1rem;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 1.5rem;
+        border-radius: 15px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+    }
+
+    .setTime input[type="datetime-local"] {
+        padding: 0.8rem 1.2rem;
+        font-size: 1rem;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        outline: none;
+        transition: all 0.3s ease;
+    }
+
+    .setTime input[type="datetime-local"]:hover {
+        background: rgba(255, 255, 255, 0.15);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .setTime input[type="datetime-local"]:focus {
+        background: rgba(255, 255, 255, 0.2);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .setTime button {
+        padding: 0.8rem 1.5rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #00b4db, #0083b0);
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 15px rgba(0, 180, 219, 0.2);
+    }
+
+    .setTime button:hover {
+        background: linear-gradient(135deg, #00c6ed, #0095c8);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(0, 180, 219, 0.3);
+    }
+
+    .setTime button:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 10px rgba(0, 180, 219, 0.2);
+    }
+
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+        filter: invert(1);
+        opacity: 0.7;
+        cursor: pointer;
+    }
+
+    input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover {
+        opacity: 1;
+    }
+
+    @media (prefers-color-scheme: dark) {
+        input[type="datetime-local"] {
+            color-scheme: dark;
+        }
+    }
+
+    </style>
+</head>
+<body>
+    <h1 id='title'> Countdown</h1>
+
+    <div class="countdownAll-container">
+        <div class="four_container">
+            <div class="number" id="days">00</div>
+            <div class="label">day(s)</div>
+        </div>
+        <div class="four_container">
+            <div class="number" id="hours">00</div>
+            <div class="label">hour(s)</div>
+        </div>
+        <div class="four_container">
+            <div class="number" id="minutes">00</div>
+            <div class="label">minute(s)</div>
+        </div>
+        <div class="four_container">
+            <div class="number" id="seconds">00</div>
+            <div class="label">second(s)</div>
+        </div>
+    </div>
+
+    <div class="setTime">
+        <input type="datetime-local" id="targetDate">
+        <button onclick="setNewTarget()">Set</button>
+    </div>
+
+    <script>
+        // Set default target to tomorrow
+        let targetDate = new Date();
+        targetDate.setDate(targetDate.getDate()+1);
+        targetDate.setHours(
+            targetDate.getHours(),
+            targetDate.getMinutes(),
+            targetDate.getSeconds()
+        );
+
+        // Format: YYYY-MM-DDTHH:mm
+        document.getElementById('targetDate').value = targetDate.toISOString().slice(0,16);
+
+        function updateCountdown(){
+            // Get time difference
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            // Calculate time units
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Update display
+            document.getElementById('days').textContent = String(days).padStart(2,'0');
+            document.getElementById('hours').textContent = String(hours).padStart(2,'0');
+            document.getElementById('minutes').textContent = String(minutes).padStart(2,'0');
+            document.getElementById('seconds').textContent = String(seconds).padStart(2,'0');
+
+            // Handle countdown end
+            if(distance < 0){
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+        }
+
+        // Set new target date
+        function setNewTarget(){
+            const user_input = document.getElementById('targetDate');
+            const newTarget = new Date(user_input.value);
+
+            // Validate future date
+            if(newTarget > new Date()){
+                targetDate = newTarget;
+            }else{
+                alert('Please select a future date!');
+            }
+        }
+
+        // Init countdown
+        setInterval(updateCountdown,1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
