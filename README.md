@@ -25,7 +25,7 @@
 
 ## 💻 Preview
 
-![Countdown Timer Preview](preview.png)
+![Countdown Timer Preview](https://github.com/LiZhongpeng2/countdown-timer/blob/main/demo.png)
 
 ## 🛠️ Technologies Used
 
